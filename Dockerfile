@@ -1,24 +1,17 @@
-FROM ruby:2.1
-MAINTAINER graham@grahamc.com
+FROM ubuntu
+MAINTAINER aahmed@mum.edu
 
-RUN apt-get update \
-  && apt-get install -y \
-    node \
-    python-pygments \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/
+RUN apt-get update
+RUN apt-get install ruby-full build-essential zlib1g-dev -y
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/
 
-RUN gem install \
-  github-pages \
-  jekyll \
-  jekyll-redirect-from \
-  kramdown \
-  rdiscount \
-  rouge
+RUN echo '# Install Ruby Gems to ~/gems' >> ~/.bashrc
+RUN echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
+RUN echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
+#RUN source ~/.bashrc
 
-VOLUME /src
-EXPOSE 4000
+RUN gem install jekyll bundler
 
-WORKDIR /src
-ENTRYPOINT ["jekyll"]
+ENTRYPOINT ["/bin/sh"]
 
